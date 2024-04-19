@@ -18,7 +18,7 @@ class ApiService {
   Future<Map<String, String>> requestLoanDecision(
       String personalCode, int loanAmount, int loanPeriod) async {
     final response = await httpClient.post(
-      Uri.parse('$_baseUrl/loan/decision'),
+      Uri.parse('$_baseUrl/loan'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'personalCode': personalCode,

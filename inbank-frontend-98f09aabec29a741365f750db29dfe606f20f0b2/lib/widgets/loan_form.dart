@@ -12,9 +12,10 @@ import '../colors.dart';
 
 // LoanForm is a StatefulWidget that displays a loan application form.
 class LoanForm extends StatefulWidget {
-  const LoanForm({Key? key}) : super(key: key);
+  const LoanForm({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoanFormState createState() => _LoanFormState();
 }
 
@@ -27,6 +28,7 @@ class _LoanFormState extends State<LoanForm> {
   int _loanAmountResult = 0;
   int _loanPeriodResult = 0;
   String _errorMessage = '';
+  Color _sliderColor = AppColors.secondaryColor;
 
   // Submit the form and update the state with the loan decision results.
   // Only submits if the form inputs are validated.
@@ -38,12 +40,14 @@ class _LoanFormState extends State<LoanForm> {
         int tempAmount = int.parse(result['loanAmount'].toString());
         int tempPeriod = int.parse(result['loanPeriod'].toString());
 
-        if (tempAmount <= _loanAmount || tempPeriod > _loanPeriod) {
+        if (tempAmount < _loanAmount || tempPeriod > _loanPeriod) {
           _loanAmountResult = int.parse(result['loanAmount'].toString());
           _loanPeriodResult = int.parse(result['loanPeriod'].toString());
+          _sliderColor = AppColors.errorColor;
         } else {
-          _loanAmountResult = _loanAmount;
-          _loanPeriodResult = _loanPeriod;
+          _loanAmountResult = int.parse(result['loanAmount'].toString());
+          _loanPeriodResult = int.parse(result['loanPeriod'].toString());
+          _sliderColor = Colors.green;
         }
         _errorMessage = result['errorMessage'].toString();
       });
@@ -80,7 +84,7 @@ class _LoanFormState extends State<LoanForm> {
                             onChanged: (value) {
                               setState(() {
                                 _nationalId = value ?? '';
-                                _submitForm();
+                                //_submitForm();
                               });
                             },
                           ),
@@ -97,17 +101,17 @@ class _LoanFormState extends State<LoanForm> {
                     max: 10000,
                     divisions: 80,
                     label: '$_loanAmount €',
-                    activeColor: AppColors.secondaryColor,
+                    activeColor: _sliderColor,
                     onChanged: (double newValue) {
                       setState(() {
                         _loanAmount = ((newValue.floor() / 100).round() * 100);
-                        _submitForm();
+                        //_submitForm();
                       });
                     },
                   ),
                   const SizedBox(height: 4),
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(left: 12),
@@ -136,17 +140,17 @@ class _LoanFormState extends State<LoanForm> {
                     max: 60,
                     divisions: 40,
                     label: '$_loanPeriod months',
-                    activeColor: AppColors.secondaryColor,
+                    activeColor: _sliderColor,
                     onChanged: (double newValue) {
                       setState(() {
                         _loanPeriod = ((newValue.floor() / 6).round() * 6);
-                        _submitForm();
+                        //_submitForm();
                       });
                     },
                   ),
                   const SizedBox(height: 4),
-                  Row(
-                    children: const [
+                  const Row(
+                    children: [
                       Expanded(
                         child: Padding(
                           padding: EdgeInsets.only(left: 12),
@@ -172,6 +176,18 @@ class _LoanFormState extends State<LoanForm> {
             ),
           ),
           const SizedBox(height: 16.0),
+          //Button for submitting form
+          SizedBox(
+            width: 130,
+            height: 40,
+            child: ElevatedButton(
+                onPressed: _submitForm,
+                child: const Text(
+                  "Apply",
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                )),
+          ),
+          const SizedBox(height: 16.0),
           Column(
             children: [
               Text(
@@ -179,6 +195,7 @@ class _LoanFormState extends State<LoanForm> {
               const SizedBox(height: 8.0),
               Text(
                   'Approved Loan Period: ${_loanPeriodResult != 0 ? _loanPeriodResult : "--"} months'),
+              const SizedBox(height: 8.0),
               Visibility(
                   visible: _errorMessage != '',
                   child: Text(_errorMessage, style: errorMedium))
