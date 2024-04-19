@@ -84,7 +84,6 @@ class _LoanFormState extends State<LoanForm> {
                             onChanged: (value) {
                               setState(() {
                                 _nationalId = value ?? '';
-                                //_submitForm();
                               });
                             },
                           ),
@@ -105,7 +104,6 @@ class _LoanFormState extends State<LoanForm> {
                     onChanged: (double newValue) {
                       setState(() {
                         _loanAmount = ((newValue.floor() / 100).round() * 100);
-                        //_submitForm();
                       });
                     },
                   ),
@@ -144,7 +142,6 @@ class _LoanFormState extends State<LoanForm> {
                     onChanged: (double newValue) {
                       setState(() {
                         _loanPeriod = ((newValue.floor() / 6).round() * 6);
-                        //_submitForm();
                       });
                     },
                   ),
